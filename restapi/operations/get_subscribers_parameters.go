@@ -6,7 +6,6 @@ package operations
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
-	"io"
 	"net/http"
 
 	"github.com/go-openapi/errors"
@@ -17,25 +16,24 @@ import (
 	"github.com/1Rob13/net-ekg/models"
 )
 
-// NewPostRegisterParams creates a new PostRegisterParams object
+// NewGetSubscribersParams creates a new GetSubscribersParams object
 //
 // There are no default values defined in the spec.
-func NewPostRegisterParams() PostRegisterParams {
+func NewGetSubscribersParams() GetSubscribersParams {
 
-	return PostRegisterParams{}
+	return GetSubscribersParams{}
 }
 
-// PostRegisterParams contains all the bound params for the post register operation
+// GetSubscribersParams contains all the bound params for the get subscribers operation
 // typically these are obtained from a http.Request
 //
-// swagger:parameters PostRegister
-type PostRegisterParams struct {
+// swagger:parameters GetSubscribers
+type GetSubscribersParams struct {
 
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
-	/*User JSON Object
-	  Required: true
+	/*Request User
 	  In: body
 	*/
 	User *models.User
@@ -44,8 +42,8 @@ type PostRegisterParams struct {
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
 // for simple values it will use straight method calls.
 //
-// To ensure default values, the struct must have been initialized with NewPostRegisterParams() beforehand.
-func (o *PostRegisterParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
+// To ensure default values, the struct must have been initialized with NewGetSubscribersParams() beforehand.
+func (o *GetSubscribersParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
 	var res []error
 
 	o.HTTPRequest = r
@@ -54,11 +52,7 @@ func (o *PostRegisterParams) BindRequest(r *http.Request, route *middleware.Matc
 		defer r.Body.Close()
 		var body models.User
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
-			if err == io.EOF {
-				res = append(res, errors.Required("user", "body", ""))
-			} else {
-				res = append(res, errors.NewParseError("user", "body", "", err))
-			}
+			res = append(res, errors.NewParseError("user", "body", "", err))
 		} else {
 			// validate body object
 			if err := body.Validate(route.Formats); err != nil {
@@ -74,8 +68,6 @@ func (o *PostRegisterParams) BindRequest(r *http.Request, route *middleware.Matc
 				o.User = &body
 			}
 		}
-	} else {
-		res = append(res, errors.Required("user", "body", ""))
 	}
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)

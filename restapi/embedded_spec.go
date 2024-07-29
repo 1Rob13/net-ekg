@@ -20,11 +20,42 @@ func init() {
 	SwaggerJSON = json.RawMessage([]byte(`{
   "swagger": "2.0",
   "info": {
-    "title": "User Registration API",
+    "title": "net ecg",
     "version": "1.0.0"
   },
   "paths": {
-    "/register": {
+    "/subscribers": {
+      "get": {
+        "description": "Endpoint to register a new user with name and email",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "summary": "ask if user exists",
+        "parameters": [
+          {
+            "description": "Request User",
+            "name": "user",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User registration successful",
+            "schema": {
+              "$ref": "#/definitions/UserArray"
+            }
+          },
+          "400": {
+            "description": "Invalid request payload"
+          }
+        }
+      },
       "post": {
         "description": "Endpoint to register a new user with name and email",
         "consumes": [
@@ -46,8 +77,11 @@ func init() {
           }
         ],
         "responses": {
-          "200": {
-            "description": "User registration successful"
+          "201": {
+            "description": "User registration successful",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
           },
           "400": {
             "description": "Invalid request payload"
@@ -69,27 +103,54 @@ func init() {
           "example": "John Doe"
         }
       }
+    },
+    "UserArray": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/User"
+      }
     }
-  },
-  "securityDefinitions": {
-    "BasicAuth": {
-      "type": "basic"
-    }
-  },
-  "security": [
-    {
-      "BasicAuth": []
-    }
-  ]
+  }
 }`))
 	FlatSwaggerJSON = json.RawMessage([]byte(`{
   "swagger": "2.0",
   "info": {
-    "title": "User Registration API",
+    "title": "net ecg",
     "version": "1.0.0"
   },
   "paths": {
-    "/register": {
+    "/subscribers": {
+      "get": {
+        "description": "Endpoint to register a new user with name and email",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "summary": "ask if user exists",
+        "parameters": [
+          {
+            "description": "Request User",
+            "name": "user",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User registration successful",
+            "schema": {
+              "$ref": "#/definitions/UserArray"
+            }
+          },
+          "400": {
+            "description": "Invalid request payload"
+          }
+        }
+      },
       "post": {
         "description": "Endpoint to register a new user with name and email",
         "consumes": [
@@ -111,8 +172,11 @@ func init() {
           }
         ],
         "responses": {
-          "200": {
-            "description": "User registration successful"
+          "201": {
+            "description": "User registration successful",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
           },
           "400": {
             "description": "Invalid request payload"
@@ -134,17 +198,13 @@ func init() {
           "example": "John Doe"
         }
       }
+    },
+    "UserArray": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/User"
+      }
     }
-  },
-  "securityDefinitions": {
-    "BasicAuth": {
-      "type": "basic"
-    }
-  },
-  "security": [
-    {
-      "BasicAuth": []
-    }
-  ]
+  }
 }`))
 }

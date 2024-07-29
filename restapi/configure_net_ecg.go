@@ -10,19 +10,30 @@ import (
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/runtime/middleware"
 
+	"github.com/1Rob13/net-ekg/db"
+	subscribers "github.com/1Rob13/net-ekg/handlers"
 	"github.com/1Rob13/net-ekg/restapi/operations"
 )
 
-//go:generate swagger generate server --target ../../net-ekg --name UserRegistrationAPI --spec ../swagger.yaml --principal interface{}
+//go:generate swagger generate server --target ../../net-ekg --name NetEcg --spec ../swagger.yaml --principal interface{}
 
-func configureFlags(api *operations.UserRegistrationAPIAPI) {
+func configureFlags(api *operations.NetEcgAPI) {
 	// api.CommandLineOptionsGroups = []swag.CommandLineOptionsGroup{ ... }
 }
 
-func configureAPI(api *operations.UserRegistrationAPIAPI) http.Handler {
+func configureAPI(api *operations.NetEcgAPI) http.Handler {
 	// configure the api here
 	api.ServeError = errors.ServeError
 
+	//new db
+
+	db := db.NewSQClient()
+
+	subscriberHandler := subscribers.New(db)
+
+	//new subscriber handler
+
+	api.GetSubscribersHandler = operations.GetSubscribersHandlerFunc(subscriberHandler.HandleGet)
 	// Set your custom logger if needed. Default one is log.Printf
 	// Expected interface func(string, ...interface{})
 	//
@@ -37,22 +48,14 @@ func configureAPI(api *operations.UserRegistrationAPIAPI) http.Handler {
 
 	api.JSONProducer = runtime.JSONProducer()
 
-	// Applies when the Authorization header is set with the Basic scheme
-	if api.BasicAuthAuth == nil {
-		api.BasicAuthAuth = func(user string, pass string) (interface{}, error) {
-			return nil, errors.NotImplemented("basic auth  (BasicAuth) has not yet been implemented")
-		}
+	if api.GetSubscribersHandler == nil {
+		api.GetSubscribersHandler = operations.GetSubscribersHandlerFunc(func(params operations.GetSubscribersParams) middleware.Responder {
+			return middleware.NotImplemented("hello")
+		})
 	}
-
-	// Set your custom authorizer if needed. Default one is security.Authorized()
-	// Expected interface runtime.Authorizer
-	//
-	// Example:
-	// api.APIAuthorizer = security.Authorized()
-
-	if api.PostRegisterHandler == nil {
-		api.PostRegisterHandler = operations.PostRegisterHandlerFunc(func(params operations.PostRegisterParams, principal interface{}) middleware.Responder {
-			return middleware.NotImplemented("operation operations.PostRegister has not yet been implemented")
+	if api.PostSubscribersHandler == nil {
+		api.PostSubscribersHandler = operations.PostSubscribersHandlerFunc(func(params operations.PostSubscribersParams) middleware.Responder {
+			return middleware.NotImplemented("operation operations.PostSubscribers has not yet been implemented")
 		})
 	}
 
@@ -73,6 +76,7 @@ func configureTLS(tlsConfig *tls.Config) {
 // This function can be called multiple times, depending on the number of serving schemes.
 // scheme value will be set accordingly: "http", "https" or "unix".
 func configureServer(s *http.Server, scheme, addr string) {
+
 }
 
 // The middleware configuration is for the handler executors. These do not apply to the swagger.json document.

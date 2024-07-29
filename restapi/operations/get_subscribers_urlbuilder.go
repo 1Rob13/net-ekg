@@ -11,15 +11,15 @@ import (
 	golangswaggerpaths "path"
 )
 
-// PostRegisterURL generates an URL for the post register operation
-type PostRegisterURL struct {
+// GetSubscribersURL generates an URL for the get subscribers operation
+type GetSubscribersURL struct {
 	_basePath string
 }
 
 // WithBasePath sets the base path for this url builder, only required when it's different from the
 // base path specified in the swagger spec.
 // When the value of the base path is an empty string
-func (o *PostRegisterURL) WithBasePath(bp string) *PostRegisterURL {
+func (o *GetSubscribersURL) WithBasePath(bp string) *GetSubscribersURL {
 	o.SetBasePath(bp)
 	return o
 }
@@ -27,15 +27,15 @@ func (o *PostRegisterURL) WithBasePath(bp string) *PostRegisterURL {
 // SetBasePath sets the base path for this url builder, only required when it's different from the
 // base path specified in the swagger spec.
 // When the value of the base path is an empty string
-func (o *PostRegisterURL) SetBasePath(bp string) {
+func (o *GetSubscribersURL) SetBasePath(bp string) {
 	o._basePath = bp
 }
 
 // Build a url path and query string
-func (o *PostRegisterURL) Build() (*url.URL, error) {
+func (o *GetSubscribersURL) Build() (*url.URL, error) {
 	var _result url.URL
 
-	var _path = "/register"
+	var _path = "/subscribers"
 
 	_basePath := o._basePath
 	_result.Path = golangswaggerpaths.Join(_basePath, _path)
@@ -44,7 +44,7 @@ func (o *PostRegisterURL) Build() (*url.URL, error) {
 }
 
 // Must is a helper function to panic when the url builder returns an error
-func (o *PostRegisterURL) Must(u *url.URL, err error) *url.URL {
+func (o *GetSubscribersURL) Must(u *url.URL, err error) *url.URL {
 	if err != nil {
 		panic(err)
 	}
@@ -55,17 +55,17 @@ func (o *PostRegisterURL) Must(u *url.URL, err error) *url.URL {
 }
 
 // String returns the string representation of the path with query string
-func (o *PostRegisterURL) String() string {
+func (o *GetSubscribersURL) String() string {
 	return o.Must(o.Build()).String()
 }
 
 // BuildFull builds a full url with scheme, host, path and query string
-func (o *PostRegisterURL) BuildFull(scheme, host string) (*url.URL, error) {
+func (o *GetSubscribersURL) BuildFull(scheme, host string) (*url.URL, error) {
 	if scheme == "" {
-		return nil, errors.New("scheme is required for a full url on PostRegisterURL")
+		return nil, errors.New("scheme is required for a full url on GetSubscribersURL")
 	}
 	if host == "" {
-		return nil, errors.New("host is required for a full url on PostRegisterURL")
+		return nil, errors.New("host is required for a full url on GetSubscribersURL")
 	}
 
 	base, err := o.Build()
@@ -79,6 +79,6 @@ func (o *PostRegisterURL) BuildFull(scheme, host string) (*url.URL, error) {
 }
 
 // StringFull returns the string representation of a complete url
-func (o *PostRegisterURL) StringFull(scheme, host string) string {
+func (o *GetSubscribersURL) StringFull(scheme, host string) string {
 	return o.Must(o.BuildFull(scheme, host)).String()
 }

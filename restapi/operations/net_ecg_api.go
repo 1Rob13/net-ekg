@@ -20,9 +20,9 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// NewUserRegistrationAPIAPI creates a new UserRegistrationAPI instance
-func NewUserRegistrationAPIAPI(spec *loads.Document) *UserRegistrationAPIAPI {
-	return &UserRegistrationAPIAPI{
+// NewNetEcgAPI creates a new NetEcg instance
+func NewNetEcgAPI(spec *loads.Document) *NetEcgAPI {
+	return &NetEcgAPI{
 		handlers:            make(map[string]map[string]http.Handler),
 		formats:             strfmt.Default,
 		defaultConsumes:     "application/json",
@@ -42,21 +42,17 @@ func NewUserRegistrationAPIAPI(spec *loads.Document) *UserRegistrationAPIAPI {
 
 		JSONProducer: runtime.JSONProducer(),
 
-		PostRegisterHandler: PostRegisterHandlerFunc(func(params PostRegisterParams, principal interface{}) middleware.Responder {
-			return middleware.NotImplemented("operation PostRegister has not yet been implemented")
+		GetSubscribersHandler: GetSubscribersHandlerFunc(func(params GetSubscribersParams) middleware.Responder {
+			return middleware.NotImplemented("operation GetSubscribers has not yet been implemented")
 		}),
-
-		// Applies when the Authorization header is set with the Basic scheme
-		BasicAuthAuth: func(user string, pass string) (interface{}, error) {
-			return nil, errors.NotImplemented("basic auth  (BasicAuth) has not yet been implemented")
-		},
-		// default authorizer is authorized meaning no requests are blocked
-		APIAuthorizer: security.Authorized(),
+		PostSubscribersHandler: PostSubscribersHandlerFunc(func(params PostSubscribersParams) middleware.Responder {
+			return middleware.NotImplemented("operation PostSubscribers has not yet been implemented")
+		}),
 	}
 }
 
-/*UserRegistrationAPIAPI the user registration API API */
-type UserRegistrationAPIAPI struct {
+/*NetEcgAPI the net ecg API */
+type NetEcgAPI struct {
 	spec            *loads.Document
 	context         *middleware.Context
 	handlers        map[string]map[string]http.Handler
@@ -88,15 +84,10 @@ type UserRegistrationAPIAPI struct {
 	//   - application/json
 	JSONProducer runtime.Producer
 
-	// BasicAuthAuth registers a function that takes username and password and returns a principal
-	// it performs authentication with basic auth
-	BasicAuthAuth func(string, string) (interface{}, error)
-
-	// APIAuthorizer provides access control (ACL/RBAC/ABAC) by providing access to the request and authenticated principal
-	APIAuthorizer runtime.Authorizer
-
-	// PostRegisterHandler sets the operation handler for the post register operation
-	PostRegisterHandler PostRegisterHandler
+	// GetSubscribersHandler sets the operation handler for the get subscribers operation
+	GetSubscribersHandler GetSubscribersHandler
+	// PostSubscribersHandler sets the operation handler for the post subscribers operation
+	PostSubscribersHandler PostSubscribersHandler
 
 	// ServeError is called when an error is received, there is a default handler
 	// but you can set your own with this
@@ -118,52 +109,52 @@ type UserRegistrationAPIAPI struct {
 }
 
 // UseRedoc for documentation at /docs
-func (o *UserRegistrationAPIAPI) UseRedoc() {
+func (o *NetEcgAPI) UseRedoc() {
 	o.useSwaggerUI = false
 }
 
 // UseSwaggerUI for documentation at /docs
-func (o *UserRegistrationAPIAPI) UseSwaggerUI() {
+func (o *NetEcgAPI) UseSwaggerUI() {
 	o.useSwaggerUI = true
 }
 
 // SetDefaultProduces sets the default produces media type
-func (o *UserRegistrationAPIAPI) SetDefaultProduces(mediaType string) {
+func (o *NetEcgAPI) SetDefaultProduces(mediaType string) {
 	o.defaultProduces = mediaType
 }
 
 // SetDefaultConsumes returns the default consumes media type
-func (o *UserRegistrationAPIAPI) SetDefaultConsumes(mediaType string) {
+func (o *NetEcgAPI) SetDefaultConsumes(mediaType string) {
 	o.defaultConsumes = mediaType
 }
 
 // SetSpec sets a spec that will be served for the clients.
-func (o *UserRegistrationAPIAPI) SetSpec(spec *loads.Document) {
+func (o *NetEcgAPI) SetSpec(spec *loads.Document) {
 	o.spec = spec
 }
 
 // DefaultProduces returns the default produces media type
-func (o *UserRegistrationAPIAPI) DefaultProduces() string {
+func (o *NetEcgAPI) DefaultProduces() string {
 	return o.defaultProduces
 }
 
 // DefaultConsumes returns the default consumes media type
-func (o *UserRegistrationAPIAPI) DefaultConsumes() string {
+func (o *NetEcgAPI) DefaultConsumes() string {
 	return o.defaultConsumes
 }
 
 // Formats returns the registered string formats
-func (o *UserRegistrationAPIAPI) Formats() strfmt.Registry {
+func (o *NetEcgAPI) Formats() strfmt.Registry {
 	return o.formats
 }
 
 // RegisterFormat registers a custom format validator
-func (o *UserRegistrationAPIAPI) RegisterFormat(name string, format strfmt.Format, validator strfmt.Validator) {
+func (o *NetEcgAPI) RegisterFormat(name string, format strfmt.Format, validator strfmt.Validator) {
 	o.formats.Add(name, format, validator)
 }
 
-// Validate validates the registrations in the UserRegistrationAPIAPI
-func (o *UserRegistrationAPIAPI) Validate() error {
+// Validate validates the registrations in the NetEcgAPI
+func (o *NetEcgAPI) Validate() error {
 	var unregistered []string
 
 	if o.JSONConsumer == nil {
@@ -174,12 +165,11 @@ func (o *UserRegistrationAPIAPI) Validate() error {
 		unregistered = append(unregistered, "JSONProducer")
 	}
 
-	if o.BasicAuthAuth == nil {
-		unregistered = append(unregistered, "BasicAuthAuth")
+	if o.GetSubscribersHandler == nil {
+		unregistered = append(unregistered, "GetSubscribersHandler")
 	}
-
-	if o.PostRegisterHandler == nil {
-		unregistered = append(unregistered, "PostRegisterHandler")
+	if o.PostSubscribersHandler == nil {
+		unregistered = append(unregistered, "PostSubscribersHandler")
 	}
 
 	if len(unregistered) > 0 {
@@ -190,31 +180,23 @@ func (o *UserRegistrationAPIAPI) Validate() error {
 }
 
 // ServeErrorFor gets a error handler for a given operation id
-func (o *UserRegistrationAPIAPI) ServeErrorFor(operationID string) func(http.ResponseWriter, *http.Request, error) {
+func (o *NetEcgAPI) ServeErrorFor(operationID string) func(http.ResponseWriter, *http.Request, error) {
 	return o.ServeError
 }
 
 // AuthenticatorsFor gets the authenticators for the specified security schemes
-func (o *UserRegistrationAPIAPI) AuthenticatorsFor(schemes map[string]spec.SecurityScheme) map[string]runtime.Authenticator {
-	result := make(map[string]runtime.Authenticator)
-	for name := range schemes {
-		switch name {
-		case "BasicAuth":
-			result[name] = o.BasicAuthenticator(o.BasicAuthAuth)
-
-		}
-	}
-	return result
+func (o *NetEcgAPI) AuthenticatorsFor(schemes map[string]spec.SecurityScheme) map[string]runtime.Authenticator {
+	return nil
 }
 
 // Authorizer returns the registered authorizer
-func (o *UserRegistrationAPIAPI) Authorizer() runtime.Authorizer {
-	return o.APIAuthorizer
+func (o *NetEcgAPI) Authorizer() runtime.Authorizer {
+	return nil
 }
 
 // ConsumersFor gets the consumers for the specified media types.
 // MIME type parameters are ignored here.
-func (o *UserRegistrationAPIAPI) ConsumersFor(mediaTypes []string) map[string]runtime.Consumer {
+func (o *NetEcgAPI) ConsumersFor(mediaTypes []string) map[string]runtime.Consumer {
 	result := make(map[string]runtime.Consumer, len(mediaTypes))
 	for _, mt := range mediaTypes {
 		switch mt {
@@ -231,7 +213,7 @@ func (o *UserRegistrationAPIAPI) ConsumersFor(mediaTypes []string) map[string]ru
 
 // ProducersFor gets the producers for the specified media types.
 // MIME type parameters are ignored here.
-func (o *UserRegistrationAPIAPI) ProducersFor(mediaTypes []string) map[string]runtime.Producer {
+func (o *NetEcgAPI) ProducersFor(mediaTypes []string) map[string]runtime.Producer {
 	result := make(map[string]runtime.Producer, len(mediaTypes))
 	for _, mt := range mediaTypes {
 		switch mt {
@@ -247,7 +229,7 @@ func (o *UserRegistrationAPIAPI) ProducersFor(mediaTypes []string) map[string]ru
 }
 
 // HandlerFor gets a http.Handler for the provided operation method and path
-func (o *UserRegistrationAPIAPI) HandlerFor(method, path string) (http.Handler, bool) {
+func (o *NetEcgAPI) HandlerFor(method, path string) (http.Handler, bool) {
 	if o.handlers == nil {
 		return nil, false
 	}
@@ -262,8 +244,8 @@ func (o *UserRegistrationAPIAPI) HandlerFor(method, path string) (http.Handler, 
 	return h, ok
 }
 
-// Context returns the middleware context for the user registration API API
-func (o *UserRegistrationAPIAPI) Context() *middleware.Context {
+// Context returns the middleware context for the net ecg API
+func (o *NetEcgAPI) Context() *middleware.Context {
 	if o.context == nil {
 		o.context = middleware.NewRoutableContext(o.spec, o, nil)
 	}
@@ -271,21 +253,25 @@ func (o *UserRegistrationAPIAPI) Context() *middleware.Context {
 	return o.context
 }
 
-func (o *UserRegistrationAPIAPI) initHandlerCache() {
+func (o *NetEcgAPI) initHandlerCache() {
 	o.Context() // don't care about the result, just that the initialization happened
 	if o.handlers == nil {
 		o.handlers = make(map[string]map[string]http.Handler)
 	}
 
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/subscribers"] = NewGetSubscribers(o.context, o.GetSubscribersHandler)
 	if o.handlers["POST"] == nil {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
-	o.handlers["POST"]["/register"] = NewPostRegister(o.context, o.PostRegisterHandler)
+	o.handlers["POST"]["/subscribers"] = NewPostSubscribers(o.context, o.PostSubscribersHandler)
 }
 
 // Serve creates a http handler to serve the API over HTTP
 // can be used directly in http.ListenAndServe(":8000", api.Serve(nil))
-func (o *UserRegistrationAPIAPI) Serve(builder middleware.Builder) http.Handler {
+func (o *NetEcgAPI) Serve(builder middleware.Builder) http.Handler {
 	o.Init()
 
 	if o.Middleware != nil {
@@ -298,24 +284,24 @@ func (o *UserRegistrationAPIAPI) Serve(builder middleware.Builder) http.Handler 
 }
 
 // Init allows you to just initialize the handler cache, you can then recompose the middleware as you see fit
-func (o *UserRegistrationAPIAPI) Init() {
+func (o *NetEcgAPI) Init() {
 	if len(o.handlers) == 0 {
 		o.initHandlerCache()
 	}
 }
 
 // RegisterConsumer allows you to add (or override) a consumer for a media type.
-func (o *UserRegistrationAPIAPI) RegisterConsumer(mediaType string, consumer runtime.Consumer) {
+func (o *NetEcgAPI) RegisterConsumer(mediaType string, consumer runtime.Consumer) {
 	o.customConsumers[mediaType] = consumer
 }
 
 // RegisterProducer allows you to add (or override) a producer for a media type.
-func (o *UserRegistrationAPIAPI) RegisterProducer(mediaType string, producer runtime.Producer) {
+func (o *NetEcgAPI) RegisterProducer(mediaType string, producer runtime.Producer) {
 	o.customProducers[mediaType] = producer
 }
 
 // AddMiddlewareFor adds a http middleware to existing handler
-func (o *UserRegistrationAPIAPI) AddMiddlewareFor(method, path string, builder middleware.Builder) {
+func (o *NetEcgAPI) AddMiddlewareFor(method, path string, builder middleware.Builder) {
 	um := strings.ToUpper(method)
 	if path == "/" {
 		path = ""
