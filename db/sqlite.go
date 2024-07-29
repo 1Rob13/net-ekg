@@ -3,6 +3,7 @@ package db
 import (
 	"database/sql"
 
+	"github.com/1Rob13/net-ekg/models"
 )
 
 type Saver interface {
