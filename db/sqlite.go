@@ -8,7 +8,7 @@ import (
 
 type Saver interface {
 	Save(models.User) error
-	RetrieveAllUsers() ([]models.User, error)
+	RetrieveAllUsers() (models.UserArray, error)
 	Delete(models.User) error
 }
 
@@ -16,7 +16,7 @@ type SQLiteClient struct {
 	DB *sql.DB
 }
 
-func New() *SQLiteClient {
+func NewSQClient() *SQLiteClient {
 	//TODO
 	//init process sqlite
 	// ensure that necessary db and table are present
@@ -26,8 +26,8 @@ func New() *SQLiteClient {
 func (s *SQLiteClient) Save(models.User) error {
 	panic("not implemented")
 }
-func (s *SQLiteClient) RetrieveAllUsers() ([]models.User, error) {
-	panic("not implemented")
+func (s *SQLiteClient) RetrieveAllUsers() (models.UserArray, error) {
+	return models.UserArray{{Name: "hans", Email: "dontgetTheFlammenwerfer@problems.de"}, {Name: "joergdeherg", Email: "dontgetTheFlammenwerfer@problems.de"}}, nil
 }
 
 func (s *SQLiteClient) Delete(models.User) error {

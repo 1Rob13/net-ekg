@@ -1,9 +1,9 @@
 swagger: "2.0"
 info:
-  title: PC ECG App
+  title: net ecg
   version: 1.0.0
 paths:
-  /register:
+  /subscribers:
     post:
       summary: Register a new user
       description: Endpoint to register a new user with name and email
@@ -19,8 +19,30 @@ paths:
           schema:
             $ref: '#/definitions/User'
       responses:
+            201:
+              description: "User registration successful"
+              schema:
+                $ref: '#/definitions/User'
+            400:
+              description: Invalid request payload    
+    get:
+      summary: ask if user exists
+      description: Endpoint to register a new user with name and email
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: user
+          description: Request User
+          schema:
+            $ref: '#/definitions/User'
+      responses:
         200:
           description: User registration successful
+          schema:
+            $ref: '#/definitions/UserArray'
         400:
           description: Invalid request payload
 definitions:  
@@ -33,8 +55,7 @@ definitions:
         type: string
         format: email
         example: johndoe@example.com
-securityDefinitions:
-  BasicAuth:
-    type: basic
-security:
-  - BasicAuth: []
+  UserArray:
+    type: array
+    items: 
+     $ref: '#/definitions/User'
