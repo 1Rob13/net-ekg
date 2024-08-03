@@ -24,7 +24,9 @@ paths:
               schema:
                 $ref: '#/definitions/User'
             400:
-              description: Invalid request payload    
+              description: Invalid request payload
+              schema:
+                $ref: '#/definitions/Error'    
     get:
       summary: ask if user exists
       description: Endpoint to register a new user with name and email
@@ -45,6 +47,8 @@ paths:
             $ref: '#/definitions/UserArray'
         400:
           description: Invalid request payload
+          schema:
+            $ref: '#/definitions/Error'
 definitions:  
   User:
     properties:
@@ -59,3 +63,9 @@ definitions:
     type: array
     items: 
      $ref: '#/definitions/User'
+  Error:
+    properties: 
+      message:
+        type: string
+        example: reason for failing
+

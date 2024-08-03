@@ -4,6 +4,7 @@ import (
 	"github.com/go-openapi/runtime/middleware"
 
 	"github.com/1Rob13/net-ekg/db"
+	"github.com/1Rob13/net-ekg/models"
 	"github.com/1Rob13/net-ekg/restapi/operations"
 )
 
@@ -21,8 +22,7 @@ func (s *SubscriberHandler) HandleGet(params operations.GetSubscribersParams) mi
 	users, err := s.Saver.RetrieveAllUsers()
 
 	if err != nil {
-
-		return operations.NewGetSubscribersOK()
+		return operations.NewGetSubscribersBadRequest().WithPayload(&models.Error{Message: err.Error()})
 	}
 
 	// this can be the place to implement
@@ -31,8 +31,11 @@ func (s *SubscriberHandler) HandleGet(params operations.GetSubscribersParams) mi
 
 func (s *SubscriberHandler) HandlePost(params operations.PostSubscribersParams) middleware.Responder {
 
-	panic("not implemented")
+	err := s.Saver.Save(*params.User)
 
-	//read the request
+	if err != nil {
+		return operations.NewGetSubscribersBadRequest().WithPayload(&models.Error{Message: err.Error()})
+	}
 
+	return operations.NewPostSubscribersCreated().WithPayload(params.User)
 }

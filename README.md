@@ -28,3 +28,5 @@ Where to implement the handler?
         // add endpoint to listen on email registration
 
         //host swagger on base path
+
+go run cmd/minimal-pet-store-example-server/main.go --port 8080
