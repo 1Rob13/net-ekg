@@ -24,7 +24,8 @@ func NewSQClient() *SQLiteClient {
 }
 
 func (s *SQLiteClient) Save(models.User) error {
-	panic("not implemented")
+	return nil
+
 }
 func (s *SQLiteClient) RetrieveAllUsers() (models.UserArray, error) {
 	return models.UserArray{{Name: "hans", Email: "dontgetTheFlammenwerfer@problems.de"}, {Name: "joergdeherg", Email: "dontgetTheFlammenwerfer@problems.de"}}, nil

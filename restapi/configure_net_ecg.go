@@ -34,6 +34,8 @@ func configureAPI(api *operations.NetEcgAPI) http.Handler {
 	//new subscriber handler
 
 	api.GetSubscribersHandler = operations.GetSubscribersHandlerFunc(subscriberHandler.HandleGet)
+
+	api.PostSubscribersHandler = operations.PostSubscribersHandlerFunc(subscriberHandler.HandlePost)
 	// Set your custom logger if needed. Default one is log.Printf
 	// Expected interface func(string, ...interface{})
 	//
@@ -50,7 +52,7 @@ func configureAPI(api *operations.NetEcgAPI) http.Handler {
 
 	if api.GetSubscribersHandler == nil {
 		api.GetSubscribersHandler = operations.GetSubscribersHandlerFunc(func(params operations.GetSubscribersParams) middleware.Responder {
-			return middleware.NotImplemented("hello")
+			return middleware.NotImplemented("operation not implemented get subscribers")
 		})
 	}
 	if api.PostSubscribersHandler == nil {
