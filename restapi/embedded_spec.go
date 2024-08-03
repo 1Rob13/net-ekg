@@ -52,7 +52,10 @@ func init() {
             }
           },
           "400": {
-            "description": "Invalid request payload"
+            "description": "Invalid request payload",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
           }
         }
       },
@@ -84,13 +87,24 @@ func init() {
             }
           },
           "400": {
-            "description": "Invalid request payload"
+            "description": "Invalid request payload",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
           }
         }
       }
     }
   },
   "definitions": {
+    "Error": {
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "reason for failing"
+        }
+      }
+    },
     "User": {
       "properties": {
         "email": {
@@ -147,7 +161,10 @@ func init() {
             }
           },
           "400": {
-            "description": "Invalid request payload"
+            "description": "Invalid request payload",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
           }
         }
       },
@@ -179,13 +196,24 @@ func init() {
             }
           },
           "400": {
-            "description": "Invalid request payload"
+            "description": "Invalid request payload",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
           }
         }
       }
     }
   },
   "definitions": {
+    "Error": {
+      "properties": {
+        "message": {
+          "type": "string",
+          "example": "reason for failing"
+        }
+      }
+    },
     "User": {
       "properties": {
         "email": {

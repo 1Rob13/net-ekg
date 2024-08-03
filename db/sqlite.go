@@ -2,6 +2,7 @@ package db
 
 import (
 	"database/sql"
+	"fmt"
 
 	"github.com/1Rob13/net-ekg/models"
 )
@@ -24,7 +25,7 @@ func NewSQClient() *SQLiteClient {
 }
 
 func (s *SQLiteClient) Save(models.User) error {
-	return nil
+	return fmt.Errorf("cant create user cause db not implemented yet")
 
 }
 func (s *SQLiteClient) RetrieveAllUsers() (models.UserArray, error) {
