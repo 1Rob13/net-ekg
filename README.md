@@ -30,3 +30,9 @@ Where to implement the handler?
         //host swagger on base path
 
 go run cmd/minimal-pet-store-example-server/main.go --port 8080
+
+
+TODO
+for debug:
+
+export LOG_LEVEL=DEBUG
